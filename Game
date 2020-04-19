@@ -1,0 +1,43 @@
+import pygame
+pygame.init()
+win=pygame.display.set_mode((500,500))
+pygame.display.set_caption("Игра")
+x=350
+y=350
+h=30
+w=30
+speed=5
+run=True
+isJump=True
+Jump=5
+while run:
+    pygame.time.delay(50)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            run=False
+    keys=pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and x > 5:
+        x-=speed
+    if keys[pygame.K_RIGHT] and x < 500-w-5:
+        x+=speed
+    if not(isJump):
+        if keys[pygame.K_UP] and y > 5:
+            y-=speed
+        if keys[pygame.K_DOWN]and y < 500-h-5:
+            y+=speed
+        if keys[pygame.K_SPACE]:
+            isJump = True
+    else:
+        if Jump>=-5:
+            if Jump < 0:
+                y+=(Jump**2)/4
+            else:
+                y-=(Jump**2)/4
+            Jump -=1
+        else:
+            isJump=False
+            Jump=5
+    win.fill((0,0,0))
+    pygame.draw.rect(win,(0,0,255),(x,y,w,h))
+    pygame.display.update()
+pygame.quit()
