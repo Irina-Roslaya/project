@@ -1,4 +1,5 @@
 import pygame
+from random import randint
 pygame.init()
 win=pygame.display.set_mode((640,360))
 pygame.display.set_caption("Игра")
@@ -17,6 +18,19 @@ Jump= 5
 left=False
 right=False
 anim=0
+HP=True
+hp=120
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, x, filename):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(filename).convert_alpha()
+        self.rect = self.image.get_rect(center=(640, 320))
+    def update(self):
+        if self.rect.x >= 0:
+            self.rect.x -= 2
+        else:
+            self.rect.x = 640
+enemy1 = Enemy(randint(1, 350), 'Project_Game\enemy_run_1.png')
 class snaryad():
     def __init__(self,x,y,radius,color ,facing):
         self.x = x
@@ -42,7 +56,13 @@ def draw():
         win.blit(stil,(x,y))
     for bullet in bullets:
         bullet.draw(win,)
+    if HP:
+        win.blit(enemy1.image, enemy1.rect)
+        pygame.display.update()
+        pygame.time.delay(20)
+        enemy1.update()
     pygame.display.update()
+
 run=True
 bullets=[]
 while run:
@@ -58,11 +78,11 @@ while run:
     keys=pygame.key.get_pressed()
     if keys[pygame.K_z]:
         if len(bullets)<5:
-            bullets.append(snaryad(round(x+w//2),round(y+h//2),2,(100,149,237),-1))
+            bullets.append(snaryad(round(x+w//2),round(y+h//2),5,(100,149,237),-1))
 
     if keys[pygame.K_x]:
         if len(bullets)<5:
-            bullets.append(snaryad(round(x+w//2),round(y+h//2),2,(100,149,237),1))
+            bullets.append(snaryad(round(x+w//2),round(y+h//2),5,(100,149,237),1))
     if keys[pygame.K_LEFT] and x > 5:
         x-=speed
         left=True
@@ -88,5 +108,13 @@ while run:
         else:
             isJump=False
             Jump=5
+    for bullet in bullets:
+         if HP:
+             if bullet.x==500:
+                 bullets.pop(bullets.index(bullet))
+                 hp=hp-20
+    if hp<1:
+         HP=False
+
     draw()
 pygame.quit()
