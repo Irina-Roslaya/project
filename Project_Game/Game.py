@@ -7,8 +7,11 @@ walkRight = [pygame.image.load("Project_Game\elf21.png"),pygame.image.load('Proj
 walkLeft=[pygame.image.load('Project_Game\elf11.png'),pygame.image.load('Project_Game\elf12.png'),pygame.image.load('Project_Game\elf13.png'),pygame.image.load('Project_Game\elf14.png'),pygame.image.load('Project_Game\elf15.png'),pygame.image.load('Project_Game\elf16.png'),pygame.image.load('Project_Game\elf17.png'),pygame.image.load('Project_Game\elf18.png'),pygame.image.load('Project_Game\elf19.png'),pygame.image.load('Project_Game\elf110.png')]
 stil=pygame.image.load('Project_Game\stay_elf.png')
 fon=pygame.image.load('Project_Game\phon.jpg')
+yachicc=pygame.image.load("Project_Game\yachicc.jpg")
+portal=pygame.image.load("Project_Game\portal.png")
+portal2=pygame.image.load("Project_Game\portal2.png")
 clock=pygame.time.Clock()
-x=10
+x=-20
 y=280
 h=80
 w=80
@@ -20,6 +23,7 @@ right=False
 anim=0
 HP=True
 hp=120
+f=0
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, filename):
         pygame.sprite.Sprite.__init__(self)
@@ -28,8 +32,10 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         if self.rect.x >= 0:
             self.rect.x -= 2
+            f=self.rect.x
         else:
             self.rect.x = 640
+            f=self.rect.x
 enemy1 = Enemy(randint(1, 350), 'Project_Game\enemy_run_1.png')
 class snaryad():
     def __init__(self,x,y,radius,color ,facing):
@@ -43,6 +49,9 @@ class snaryad():
         pygame.draw.circle(win,self.color,(self.x,self.y),self.radius)
 def draw():
     win.blit(fon,(0,0))
+    win.blit(yachicc,(310,315))
+    win.blit(portal,(-10,305))
+    win.blit(portal2,(620,305))
     global anim
     if anim + 1 >= 30:
         anim=0
@@ -83,14 +92,16 @@ while run:
     if keys[pygame.K_x]:
         if len(bullets)<5:
             bullets.append(snaryad(round(x+w//2),round(y+h//2),5,(100,149,237),1))
-    if keys[pygame.K_LEFT] and x > 5:
-        x-=speed
-        left=True
-        right=False
-    elif keys[pygame.K_RIGHT] and x < 640-w-5:
-        x+=speed
-        left=False
-        right=True
+    if keys[pygame.K_LEFT] and x > -41:
+        if (x,y)!=(315,280):
+            x-=speed
+            left=True
+            right=False
+    elif keys[pygame.K_RIGHT] and x < 601:
+        if (x,y)!=(255,280):
+            x+=speed
+            left=False
+            right=True
     else:
         left=False
         right=False
@@ -115,6 +126,9 @@ while run:
                  hp=hp-20
     if hp<1:
          HP=False
-
+    if x==-25:
+        x=575
+    if x==590:
+        x=-10
     draw()
 pygame.quit()
